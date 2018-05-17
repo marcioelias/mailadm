@@ -12,4 +12,18 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+   .extract(['tether',
+             'jquery',
+             'jquery-ui',
+             'jquery-smooth-scroll',
+             'jquery-browserify',
+             'jquery-mask-plugin',
+             //'bootstrap',
+             'bootstrap-switch'
+             ])
+   .autoload({
+        jquery: ['$', 'jQuery', 'jquery'],
+        tether: ['window.Tether', 'Tether']
+    })
+   .sass('resources/assets/sass/app.scss', 'public/css/app.css');
+   /*.styles([], 'public/css/other.css'); */

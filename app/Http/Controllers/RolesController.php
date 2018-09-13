@@ -57,7 +57,7 @@ class RolesController extends Controller
     public function create()
     {
         if (Auth::user()->canCadastrarRole()) {
-            $permissions = Permission::orderBy('name', 'asc')->get();
+            $permissions = Permission::orderBy('id', 'asc')->get();
 
             return View('role.create', [
                 'permissions' => $permissions
@@ -85,7 +85,18 @@ class RolesController extends Controller
             try {
                 DB::beginTransaction();
 
-                $role_id = DB::table('roles')->insertGetId([
+                $role = new Role($request->all());
+
+                $role->save();
+                
+                $permissions = Permission::whereIn('id', $request->permissions)->get();
+                
+                $role->permissions()->sync($permissions);
+                
+
+                DB::commit();
+                
+                /* $role_id = DB::table('roles')->insertGetId([
                     'name' => $request->name,
                     'display_name' => $request->display_name,
                     'description' => $request->description
@@ -96,7 +107,7 @@ class RolesController extends Controller
                         'permission_id' => $permission,
                         'role_id' => $role_id
                     ]);
-                }
+                } */
             } catch (\Exception $e) {
                 DB::rollback();
 
@@ -156,20 +167,20 @@ class RolesController extends Controller
     {
         if (Auth::user()->canAlterarRole()) {
             $this->validate($request, [
-                'name' => 'required|string|min:5|max:100|unique:roles,id,'.$role->id,
-                'display_name' => 'required|string|max:100|unique:roles,id,'.$role->id
+                'name' => 'required|string|min:5|max:100|unique:roles,name,'.$role->id,
+                'display_name' => 'required|string|max:100|unique:roles,display_name,'.$role->id
             ]);
 
-            DB::beginTransaction();
             try {
-                DB::table('roles')
-                        ->where('id', $role->id)
-                        ->update([
-                            'display_name' => $request->display_name,
-                            'description' => $request->description
-                        ]);
+
+                DB::beginTransaction();
+
+                $role->fill($request->all());
+                $role->save();
                 
-                $this->updatePermissions($request, $role);
+                $permissions = Permission::whereIn('id', $request->permissions)->get();
+                
+                $role->permissions()->sync($permissions);
                         
                 DB::commit();
 
@@ -184,7 +195,7 @@ class RolesController extends Controller
                 Session::flash('error', __('messages.exception', [
                     'exception' => $e->getMessage()
                 ]));
-                return redirect()->back->withInput();
+                return redirect()->back()->withInput();
             }
         } else {
             Session::flash('error', __('messages.access_denied'));
@@ -234,6 +245,7 @@ class RolesController extends Controller
     }
 
     public function removeOldPermissions(Request $request, Role $role) {
+        dd($request->all());
         DB::table('permission_role')->where('role_id', $role->id)
                                     ->whereNotIn('permission_id', $request->permissions)
                                     ->delete();
@@ -241,7 +253,7 @@ class RolesController extends Controller
 
     public function addNewPermissions(Request $request, Role $role) {
         $actualPermissions = DB::table('permission_role')->select('permission_id')->where('role_id', $role->id)->get();
-        
+        dd($request->all());
         foreach ($request->permissions as $newPermission) {
             $dbPermission = DB::table('permission_role')->where('role_id', $role->id)->where('permission_id', $newPermission)->first();
             if ($dbPermission === null) {

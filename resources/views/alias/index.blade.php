@@ -9,6 +9,7 @@
             'model' => 'alias',
             'displayField' => 'address',
             'tableTitle' => 'Aliases',
+            'keyField' => 'address',
             'actions' => ['edit', 'destroy']
             ]);
         @endcomponent

@@ -55,11 +55,11 @@
                         'inputs' => [
                             [
                                 'type' => 'text',
-                                'field' => 'conta',
+                                'field' => 'username',
                                 'label' => 'Conta',
                                 'inputSize' => 8,
                                 'inputValue' => $mailbox->username,
-                                'disabled' => true
+                                'readOnly' => true
                             ],
                             [
                                 'type' => 'text',

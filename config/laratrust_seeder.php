@@ -3,24 +3,24 @@
 return [
     'role_structure' => [
         'administrador' => [
-            'users' => 'c,r,u,d',
-            'acl' => 'c,r,u,d',
-            'profile' => 'r,u'
+            'user' => 'c,r,u,d',
+            'role' => 'c,r,u,d',
+            'mailbox' => 'c,r,u,d',
+            'alias' => 'c,r,u,d',
+            'domain' => 'c,r,u,d',
+            'role' => 'c,r,u,d',
+            'domain' => 'c,r,u,d',
         ],
         'usuario' => [
-            'users' => 'c,r,u,d',
-            'profile' => 'r,u'
-        ]
-    ],
-    'permission_structure' => [
-        'cru_user' => [
-            'profile' => 'c,r,u'
+            'mailbox' => 'c,r,u',
+            'alias' => 'c,r,u',
+            'domain' => 'r',
         ],
     ],
     'permissions_map' => [
         'c' => 'cadastrar',
         'r' => 'listar',
-        'u' => 'editar',
-        'd' => 'excluir' 
+        'u' => 'alterar',
+        'd' => 'excluir'
     ]
 ];

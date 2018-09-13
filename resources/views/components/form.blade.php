@@ -1,6 +1,9 @@
 @php
     $btnAlign = isset($btnAlign) ? $btnAlign : 'Right';
-    $btnColor = ['submit' => 'success', 'reset' => 'danger', 'button' => 'primary'];
+    $btnColor = ['submit' => 'success', 'reset' => 'danger', 'button' => 'danger'];
+    $fileUpload = (isset($fileUpload) && $fileUpload) ? 'enctype=multipart/form-data' : '';
+    $cancelRoute = (isset($cancelRoute) ? $cancelRoute : false);
+    $indexRoute = $cancelRoute ? $cancelRoute : explode('.', Route::current()->getAction()['as'])[0].'.index';    
 @endphp
 
 @if($title != '')
@@ -8,7 +11,7 @@
 @endif
 <div class="panel-body">
     {{-- <p>Fields with <span class="label label-pill label-success">*</span> are required.</p> --}}
-    <form class="form" role="form" method="POST" action="{{$routeUrl}}">
+    <form class="form" {{isset($formTarget) ? 'target='.$formTarget : ''}} role="form" method="POST" action="{{$routeUrl}}" {{$fileUpload}}>
         {{ csrf_field() }}
 
         @if(isset($method))
@@ -19,21 +22,38 @@
 
         @yield('formFields')
 
+        {{--  <hr>  --}}
+
         <div class="form-group">
-            <div class="{{ ($btnAlign == 'Right') ? 'pull-right' : '' }}">
+            <div class="{{ ($btnAlign == 'Right') ? 'pull-right' : '' }} padding-bottom-15">
                 @if(is_array($formButtons))
                     @foreach($formButtons as $formButton)
                         @if(($formButton['type'] == 'submit') || ($formButton['type'] == 'reset'))
-                            <button type="{{$formButton['type']}}" class="btn btn-{{$btnColor[$formButton['type']]}}">
-                                {{ __($formButton['label']) }}
+                            <button type="{{$formButton['type']}}" class="btn btn-{{$btnColor[$formButton['type']]}}" data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">
+                                @if(isset($formButton['icon']))
+                                    <span class="glyphicon glyphicon-{{$formButton['icon']}}"></span>
+                                @else
+                                    {{ __($formButton['label']) }}
+                                @endif
                             </button>
                         @else
-                            <a href="{{ url()->previous() }}" class="btn btn-{{$btnColor[$formButton['type']]}}">{{ __($formButton['label']) }}</a>
+                            {{--  <a href="{{ url()->previous() }}" class="btn btn-{{$btnColor[$formButton['type']]}}"  data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">  --}}
+                            <a href="{{ route($indexRoute) }}" class="btn btn-{{$btnColor[$formButton['type']]}}"  data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">
+                                @if(isset($formButton['icon']))
+                                    <span class="glyphicon glyphicon-{{$formButton['icon']}}"></span>
+                                @else
+                                    {{ __($formButton['label']) }}
+                                @endif
+                            </a>
                         @endif
                     @endforeach
                 @else
-                    <button type="submit" class="btn btn-primary">
-                        {{ __($submitLabel) }}
+                    <button type="submit" class="btn btn-primary"  data-toggle="tooltip" data-placement="top" title="{{ __($formButton['label']) }}" data-original-title="{{ __($formButton['label']) }}">
+                        @if(isset($formButton['icon']))
+                            <span class="glyphicon glyphicon-{{$formButton['icon']}}"></span>
+                        @else
+                            {{ __($formButton['label']) }}
+                        @endif
                     </button>
                 @endif
             </div>

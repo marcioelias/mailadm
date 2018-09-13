@@ -13,17 +13,27 @@ let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .extract(['tether',
-             'jquery',
+            /* 'vue', */
+             //'jquery',
              'jquery-ui',
              'jquery-smooth-scroll',
              'jquery-browserify',
              'jquery-mask-plugin',
-             //'bootstrap',
-             'bootstrap-switch'
+             //'bootstrap-sass',
+             'bootstrap-switch',
+             //'bootstrap-toggle',
+             'vue-bootstrap-toggle'
+             //'bootstrap-select',
              ])
    .autoload({
         jquery: ['$', 'jQuery', 'jquery'],
         tether: ['window.Tether', 'Tether']
     })
-   .sass('resources/assets/sass/app.scss', 'public/css/app.css');
-   /*.styles([], 'public/css/other.css'); */
+   .sass('resources/assets/sass/app.scss', 'public/css/app.css')
+   .styles([
+        'node_modules/bootstrap-select/dist/css/bootstrap-select.min.css',
+        'node_modules/jquery-ui/themes/base/base.css',
+        'node_modules/bootstrap-toggle/css/bootstrap2-toggle.css',
+    ], 'public/css/other.css'); 
+   
+mix.js('resources/assets/js/aliasmembers.js', 'public/js');

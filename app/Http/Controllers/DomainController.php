@@ -4,24 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Domain;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class DomainController extends Controller
 {
 
     public $captions = array(
-        'domain' => 'Domínio');
-
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-     public function __construct()
-     {
-         $this->middleware('auth');
-     }
- 
+        'domain' => 'Domínio'
+    ); 
 
     /**
      * Display a listing of the resource.
@@ -30,13 +21,18 @@ class DomainController extends Controller
      */
     public function index(Request $request)
     {
-        if (isset($request->searchField)) {
-            $domains = Domain::where('domain', 'like', '%'.$request->searchField.'%')->orderBy('domain', 'asc')->paginate();
+        if (Auth::user()->canListarDomain()) {
+            if (isset($request->searchField)) {
+                $domains = Domain::where('domain', 'like', '%'.$request->searchField.'%')->orderBy('domain', 'asc')->paginate();
+            } else {
+                $domains = Domain::orderBy('domain', 'asc')->paginate();
+            }
+            
+            return view('domain.index')->withDomains($domains)->withCaptions($this->captions);
         } else {
-            $domains = Domain::orderBy('domain', 'asc')->paginate();
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
         }
-        
-        return view('domain.index')->withDomains($domains)->withCaptions($this->captions);
     }
 
     /**
@@ -46,7 +42,12 @@ class DomainController extends Controller
      */
     public function create()
     {
-        return View('domain.create');
+        if (Auth::user()->canCadastrarDomain()) {
+            return View('domain.create');
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -57,48 +58,37 @@ class DomainController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'domain' => 'required|string',
-        ]);
+        if (Auth::user()->canCadastrarDomain()) {
+            $this->validate($request, [
+                'domain' => 'required|string|min:3',
+            ]);
+        
+            try {
+                $domain = new Domain($request->all());
+                if ($domain->save()) {
+                    Session::flash('success', __('messages.create_success', [
+                        'model' => __('models.domain'),
+                        'name' => $domain->domain
+                    ]));
+                    return redirect()->action('DomainController@index');
+                } else {
+                    Session::flash('error', __('messages.create_error', [
+                        'model' => __('models.domain'),
+                        'name' => $domain->domain
+                    ]));
+                    return redirect()->back()->withInput();
+                }
+            } catch (\Exception $e) {
+                Session::flash('error', __('messages.exception', [
+                    'exception' => $e->getMessage()
+                ]));
+                return redirect()->back()->withInput();
+            }
 
-        $aux = new Domain($request->all());
-        $aux->save();
-
-        return redirect()->action('DomainController@index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \mailadm\Domain  $domain
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Domain $domain)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \mailadm\Domain  $domain
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Domain $domain)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \mailadm\Domain  $domain
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Domain $domain)
-    {
-        //
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 
     /**
@@ -109,9 +99,38 @@ class DomainController extends Controller
      */
     public function destroy(Domain $domain)
     {
-        $aux = Domain::find($domain)->first();
-        $aux->delete();
+        if (Auth::user()->canExcluirDomain()) {
+            try {
+                if ($domain->delete()) {
+                    Session::flash('success', __('messages.update_success', [
+                        'model' => __('models.domain'),
+                        'name' => $domain->domain
+                    ]));
+                } else {
+                    Session::flash('error', __('messages.delete_error', [
+                        'model' => __('models.domain'),
+                        'name' => $domain->domain
+                    ]));
+                }
 
-        return redirect()->action('DomainController@index');
+                return redirect()->action('DomainController@index');
+
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 23000:
+                        Session::flash('error', __('messages.fk_exception'));
+                        break;
+                    default:
+                        Session::flash('error', __('messages.exception', [
+                            'exception' => $e->getMessage()
+                        ]));
+                        break;
+                }
+                return redirect()->action('DomainController@index');
+            }
+        } else {
+            Session::flash('error', __('messages.access_denied'));
+            return redirect()->back();
+        }
     }
 }

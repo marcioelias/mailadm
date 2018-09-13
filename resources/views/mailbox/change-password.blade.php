@@ -63,7 +63,7 @@
                             ],
                             [
                                 'type' => 'password',
-                                'field' => 'password-confirm',
+                                'field' => 'password_confirmation',
                                 'name' => 'password_confirmation',
                                 'label' => 'Confirmação de senha',
                                 'inputSize' => 6
@@ -78,15 +78,26 @@
 </div>
 
 <script>
-    $('documento').ready(function() {
+    var genPwd = function() {
+        var pwdRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
         var randomPassword = new RandomPassword();
-        passtext = randomPassword.create(8,randomPassword.chrLower+randomPassword.chrUpper+randomPassword.chrNumbers+randomPassword.chrSymbols);
-        $('#passwordTipValue').text(passtext);
-        $('#passwordSuggest').val(passtext);
+        var pwdSize = [8, 9, 10];
+        
+        passtext = randomPassword.create(pwdSize[Math.floor(Math.random() * pwdSize.length)],randomPassword.chrLower+randomPassword.chrUpper+randomPassword.chrNumbers+randomPassword.chrSymbols);
+        while(!pwdRegex.test(passtext)) {
+            passtext = randomPassword.create(pwdSize[Math.floor(Math.random() * pwdSize.length)],randomPassword.chrLower+randomPassword.chrUpper+randomPassword.chrNumbers+randomPassword.chrSymbols);
+        }
+
+        return passtext;
+    }
+    $('documento').ready(function() {
+        var pwd = genPwd();
+        $('#passwordTipValue').text(pwd);
+        $('#passwordSuggest').val(pwd);
     });
     $('#usePassword').click(function(event) {
         $('#password').val($('#passwordSuggest').val());
-        $('#password-confirm').val($('#passwordSuggest').val());
+        $('#password_confirmation').val($('#passwordSuggest').val());
         $('#passwordTip').addClass('hidden');
         $('#passwordTipUsed').removeClass('hidden');
         $('#name').focus();
@@ -95,10 +106,9 @@
         copyToClipboard("#passwordTipValue");
     });
     $('#generatePasword').click(function() {
-        var randomPassword = new RandomPassword();
-        passtext = randomPassword.create(8,randomPassword.chrLower+randomPassword.chrUpper+randomPassword.chrNumbers+randomPassword.chrSymbols);
-        $('#passwordTipValue').text(passtext);
-        $('#passwordSuggest').val(passtext);
+        var pwd = genPwd();
+        $('#passwordTipValue').text(pwd);
+        $('#passwordSuggest').val(pwd);
     });
 </script>
 

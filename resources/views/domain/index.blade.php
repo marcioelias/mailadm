@@ -8,7 +8,8 @@
             'rows' => $domains,
             'model' => 'domain',
             'displayField' => 'domain',
-            'tableTitle' => 'Domnínios',
+            'tableTitle' => 'Domínios',
+            'keyField' => 'domain',
             'actions' => ['destroy']
             ]);
         @endcomponent

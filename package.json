@@ -10,21 +10,25 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
+    "bootstrap": "^3.3.7",
     "axios": "^0.18",
-    "bootstrap": "^4.0.0",
     "popper.js": "^1.12",
     "cross-env": "^5.1",
-    "jquery": "^3.2",
+    "jquery": "^3.1.1",
     "laravel-mix": "^2.0",
     "lodash": "^4.17.4",
     "vue": "^2.5.7"
   },
   "dependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "bootstrap-select": "^1.12.4",
     "bootstrap-switch": "^3.3.4",
+    "bootswatch": "^3.3.7",
     "jquery-browserify": "^1.8.1",
     "jquery-mask-plugin": "^1.14.15",
     "jquery-smooth-scroll": "^2.2.0",
     "jquery-ui": "^1.12.1",
-    "tether": "^1.4.4"
+    "tether": "^1.4.4",
+    "vue-bootstrap-toggle": "^1.1.4"
   }
 }

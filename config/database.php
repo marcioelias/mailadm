@@ -54,6 +54,19 @@ return [
             'engine' => null,
         ],
 
+        'iredapd' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST_IREDAPD', '127.0.0.1'),
+            'port' => env('DB_PORT_IREDAPD', '5432'),
+            'database' => env('DB_DATABASE_IREDAPD', 'forge'),
+            'username' => env('DB_USERNAME_IREDAPD', 'forge'),
+            'password' => env('DB_PASSWORD_IREDAPD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

@@ -13,6 +13,7 @@
             'model' => 'mailbox',
             'displayField' => 'username',
             'tableTitle' => 'E-mails',
+            'keyField' => 'username',
             'actions' => [
                 'edit', 
                 [

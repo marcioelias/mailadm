@@ -6,10 +6,11 @@
 
 
 // Bootswatch Variables for your chosen theme
-@import "node_modules/bootswatch/sandstone/variables";
+@import "node_modules/bootswatch/lumen/variables";
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+//@import "node_modules/bootstrap/dist/css/bootstrap.css";
 
 // Bootswatch theme main CSS files
-@import "node_modules/bootswatch/sandstone/bootswatch";
+@import "node_modules/bootswatch/lumen/bootswatch";

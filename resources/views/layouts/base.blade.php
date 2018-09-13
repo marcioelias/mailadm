@@ -13,7 +13,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-    {{-- <link href="{{ asset('css/other.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/other.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -27,8 +27,9 @@
     <script src="{{ asset('js/custom.js') }}"></script>
 </head>
 <body>
-    <div id="app">
+    {{--  <div id="app">  --}}
         @yield('base_content')
-    </div>
+    {{--  </div>  --}}
+    @stack('bottom-scripts')
 </body>
 </html>

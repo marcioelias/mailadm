@@ -210,7 +210,7 @@ img {
 .button {
     border-radius: 3px;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
-    color: #FFF;
+    /* color: #FFF; */
     display: inline-block;
     text-decoration: none;
     -webkit-text-size-adjust: none;

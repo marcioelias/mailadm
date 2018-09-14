@@ -37,3 +37,4 @@ mix.js('resources/assets/js/app.js', 'public/js')
     ], 'public/css/other.css'); 
    
 mix.js('resources/assets/js/aliasmembers.js', 'public/js');
+mix.copy('node_modules/bootstrap-sass/assets/fonts/bootstrap', 'public/fonts');

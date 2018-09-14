@@ -1,11 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.base')
 
-@section('content')
+@section('base_content')
+<div class="jumbotron vcenter">
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
+                <div class="panel-heading">Esqueceu a Senha</div>
 
                 <div class="panel-body">
                     @if (session('status'))
@@ -68,9 +69,10 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div>                
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection

@@ -82,10 +82,7 @@ class UserController extends Controller
             ]);
             
             try {
-                $user = new User;
-                $user->name = $request->name;
-                $user->username = $request->username;
-                $user->email = $request->email;
+                $user = new User($request->all());
                 $user->password = bcrypt($user->password);
 
                 DB::beginTransaction();
